@@ -1,0 +1,127 @@
+<div class="content">
+    <p-table
+        #dt
+        [value]="acao"
+        [(selection)]="selectedAcoes"
+        dataKey="id"
+        [rowHover]="true"
+        [rows]="10"
+        [showCurrentPageReport]="true"
+        [rowsPerPageOptions]="[10, 25, 50]"
+        [loading]="loading"
+        [paginator]="true"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+        [filterDelay]="0"
+        [globalFilterFields]="['nome', 'precoAtual', 'valorJusto', 'taxaCrescimentoEsperada', 'taxaDesconto', 'beta', 'anosProjecao']"
+    >
+        <ng-template pTemplate="caption">
+            <div class="flex justify-content-between">
+                <p-button [outlined]="true" icon="pi pi-filter-slash" label="Clear" (click)="clear(dt)" />
+                <span class="p-input-icon-left">
+                    <i class="pi pi-search"></i>
+                    <input pInputText type="text" [(ngModel)]="searchValue" (input)="dt && dt.filterGlobal(searchValue || '', 'contains')" placeholder="Keyboard Search" />
+                </span>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="width: 4rem; text-align: center;">
+                    <p-tableHeaderCheckbox />
+                </th>
+                <th pSortableColumn="nome" style="min-width: 14rem; text-align: center;">
+                    <div class="flex justify-content-between align-items-center">
+                        Nome
+                        <p-sortIcon field="nome" />
+                        <p-columnFilter type="text" field="nome" display="menu" class="ml-auto" />
+                    </div>
+                </th>
+                <th pSortableColumn="precoAtual" style="min-width: 14rem; text-align: center;">
+                    <div class="flex justify-content-between align-items-center">
+                        Preço Atual
+                        <p-sortIcon field="precoAtual" />
+                        <p-columnFilter type="numeric" field="precoAtual" display="menu" currency="BRL" class="ml-auto" />
+                    </div>
+                </th>
+                <th pSortableColumn="valorJusto" style="min-width: 14rem; text-align: center;">
+                    <div class="flex justify-content-between align-items-center">
+                        Valor Justo
+                        <p-sortIcon field="valorJusto" />
+                        <p-columnFilter type="numeric" field="valorJusto" display="menu" currency="BRL" class="ml-auto" />
+                    </div>
+                </th>
+                <th pSortableColumn="taxaCrescimentoEsperada" style="min-width: 14rem; text-align: center;">
+                    <div class="flex justify-content-between align-items-center">
+                        Taxa Crescimento Esperada
+                        <p-sortIcon field="taxaCrescimentoEsperada" />
+                        <p-columnFilter type="numeric" field="taxaCrescimentoEsperada" display="menu" class="ml-auto" />
+                    </div>
+                </th>
+                <th pSortableColumn="taxaDesconto" style="min-width: 14rem; text-align: center;">
+                    <div class="flex justify-content-between align-items-center">
+                        Taxa Desconto
+                        <p-sortIcon field="taxaDesconto" />
+                        <p-columnFilter type="numeric" field="taxaDesconto" display="menu" class="ml-auto" />
+                    </div>
+                </th>
+                <th pSortableColumn="beta" style="min-width: 14rem; text-align: center;">
+                    <div class="flex justify-content-between align-items-center">
+                        Beta
+                        <p-sortIcon field="beta" />
+                        <p-columnFilter type="numeric" field="beta" display="menu" class="ml-auto" />
+                    </div>
+                </th>
+                <th pSortableColumn="anosProjecao" style="min-width: 14rem; text-align: center;">
+                    <div class="flex justify-content-between align-items-center">
+                        Anos Projeção
+                        <p-sortIcon field="anosProjecao" />
+                        <p-columnFilter type="numeric" field="anosProjecao" display="menu" class="ml-auto" />
+                    </div>
+                </th>
+                <th style="width: 5rem; text-align: center;"></th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-acao>
+            <tr class="p-selectable-row">
+                <td style="text-align: center;">
+                    <p-tableCheckbox [value]="acao" />
+                </td>
+                <td style="text-align: center;">
+                    <span class="p-column-title">Nome</span>
+                    {{ acao.nome }}
+                </td>
+                <td style="text-align: center;">
+                    <span class="p-column-title">Preço Atual</span>
+                    {{ acao.precoAtual | currency : 'BRL' : 'symbol' }}
+                </td>
+                <td style="text-align: center;">
+                    <span class="p-column-title">Valor Justo</span>
+                    {{ acao.valorJusto | currency : 'BRL' : 'symbol' }}
+                </td>
+                <td style="text-align: center;">
+                    <span class="p-column-title">Taxa Crescimento Esperada</span>
+                    {{ acao.taxaCrescimentoEsperada }}%
+                </td>
+                <td style="text-align: center;">
+                    <span class="p-column-title">Taxa Desconto</span>
+                    {{ acao.taxaDesconto }}%
+                </td>
+                <td style="text-align: center;">
+                    <span class="p-column-title">Beta</span>
+                    {{ acao.beta }}
+                </td>
+                <td style="text-align: center;">
+                    <span class="p-column-title">Anos Projeção</span>
+                    {{ acao.anosProjecao }}
+                </td>
+                <td style="text-align: center;">
+                    <p-button severity="secondary" icon="pi pi-cog" />
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="8" style="text-align: center;">No ações found.</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>

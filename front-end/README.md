@@ -1,0 +1,1 @@
+ng new front-end --no-standalone --routing --ssr=false

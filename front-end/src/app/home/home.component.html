@@ -1,0 +1,36 @@
+<div class="dashboard-container">
+  <!-- Barra lateral -->
+  <div class="sidebar" [ngClass]="{'active': isSidebarOpen}">
+    <!-- Logo e nome do aplicativo -->
+    <div class="logo-container" [class.collapsed]="menuCollapsed">
+      <img src="assets/logo.jpg" alt="Logo" class="logo">
+    </div>
+
+    <!-- Links do menu -->
+    <ul class="menu">
+      <li><a routerLink="" routerLinkActive="active" (click)="toggleSidebar()">Home</a></li>
+      <li><a routerLink="/acao/listar" routerLinkActive="active" (click)="toggleSidebar()">Ações</a></li>
+      <!-- Adicione mais itens de menu conforme necessário -->
+    </ul>
+  </div>
+
+  <!-- Conteúdo principal -->
+  <div class="main-content">
+    <!-- Barra superior -->
+    <p-toolbar>
+      <div class="p-toolbar-group-left">
+        <!-- Botão para abrir/fechar o menu lateral -->
+        <button pButton pRipple icon="pi pi-bars" (click)="toggleSidebar()"></button>
+      </div>
+      <div class="p-toolbar-group-right">
+        <!-- Campo de busca -->
+        <input pInputText type="text" placeholder="Search">
+        <button pButton pRipple icon="pi pi-search" class="p-ml-2"></button>
+      </div>
+    </p-toolbar>
+
+    <!-- Conteúdo dinâmico da página -->
+    <app-listar-acao></app-listar-acao>
+    <router-outlet></router-outlet>
+  </div>
+</div>

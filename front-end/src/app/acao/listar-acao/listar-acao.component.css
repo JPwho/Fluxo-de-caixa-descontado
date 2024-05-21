@@ -1,0 +1,33 @@
+/* app.component.css */
+
+/* Estilos para o menu */
+.menu {
+    /* Adicione seus estilos de menu aqui */
+}
+
+/* Estilos para o conteúdo da página */
+.content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+/* Estilos para o container de botões */
+.button-container {
+    margin-bottom: 20px;
+}
+
+/* Estilos para o container da lista */
+.list-container {
+    width: 80%; /* ou ajuste conforme necessário */
+}
+
+/* Estilos para o toast */
+.toast-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9999;
+}
