@@ -151,12 +151,14 @@ public class AcaoBO {
             Map<String, String[]> xPathMapAnos = new HashMap<>();
             xPathMapAnos.put("31/03/2020", new String[]{
                     "//*[@id=\"Col1-1-Financials-Proxy\"]/section/div[3]/div[1]/div/div[2]/div[6]/div[2]/div[3]/div[1]/div[6]/span", //5 anos
+                    "//*[@id=\"Col1-1-Financials-Proxy\"]/section/div[3]/div[1]/div/div[2]/div[5]/div[2]/div[3]/div[1]/div[6]/span", //5 anos com fluxo de caixa reduzido
                     "//*[@id=\"Col1-1-Financials-Proxy\"]/section/div[3]/div[1]/div/div[2]/div[7]/div[2]/div[3]/div[1]/div[6]/span", //6 anos
                     "//*[@id=\"Col1-1-Financials-Proxy\"]/section/div[3]/div[1]/div/div[2]/div[7]/div[2]/div[2]/div[1]/div[6]/span", //5 anos internacional
                     "//*[@id=\"Col1-1-Financials-Proxy\"]/section/div[3]/div[1]/div/div[2]/div[6]/div[2]/div[2]/div[1]/div[6]/span"  //6 anos com fluxo de caixa reduzido
             });
             xPathMapAnos.put("31/12/2021", new String[]{
                     "//*[@id=\"Col1-1-Financials-Proxy\"]/section/div[3]/div[1]/div/div[2]/div[6]/div[2]/div[3]/div[1]/div[5]/span", //5 anos
+                    "//*[@id=\"Col1-1-Financials-Proxy\"]/section/div[3]/div[1]/div/div[2]/div[5]/div[2]/div[3]/div[1]/div[5]/span", //5 anos com fluxo de caixa reduzido
                     "//*[@id=\"Col1-1-Financials-Proxy\"]/section/div[3]/div[1]/div/div[2]/div[7]/div[2]/div[3]/div[1]/div[5]/span", //6 anos
                     "//*[@id=\"Col1-1-Financials-Proxy\"]/section/div[3]/div[1]/div/div[2]/div[7]/div[2]/div[2]/div[1]/div[5]/span", //5 anos internacional
                     "//*[@id=\"Col1-1-Financials-Proxy\"]/section/div[3]/div[1]/div/div[2]/div[6]/div[2]/div[2]/div[1]/div[5]/span"  //6 anos com fluxo de caixa reduzido
@@ -164,6 +166,7 @@ public class AcaoBO {
 
             xPathMapAnos.put("31/12/2022", new String[]{
                     "//*[@id=\"Col1-1-Financials-Proxy\"]/section/div[3]/div[1]/div/div[2]/div[6]/div[2]/div[3]/div[1]/div[4]/span", //5 anos
+                    "//*[@id=\"Col1-1-Financials-Proxy\"]/section/div[3]/div[1]/div/div[2]/div[5]/div[2]/div[3]/div[1]/div[4]/span", //5 anos com fluxo de caixa reduzido
                     "//*[@id=\"Col1-1-Financials-Proxy\"]/section/div[3]/div[1]/div/div[2]/div[7]/div[2]/div[3]/div[1]/div[4]/span", //6 anos
                     "//*[@id=\"Col1-1-Financials-Proxy\"]/section/div[3]/div[1]/div/div[2]/div[7]/div[2]/div[2]/div[1]/div[4]/span", //5 anos internacional
                     "//*[@id=\"Col1-1-Financials-Proxy\"]/section/div[3]/div[1]/div/div[2]/div[6]/div[2]/div[2]/div[1]/div[4]/span"  //6 anos com fluxo de caixa reduzido
@@ -171,6 +174,7 @@ public class AcaoBO {
 
             xPathMapAnos.put("31/03/2023", new String[]{
                     "//*[@id=\"Col1-1-Financials-Proxy\"]/section/div[3]/div[1]/div/div[2]/div[6]/div[2]/div[3]/div[1]/div[3]/span", //5 anos
+                    "//*[@id=\"Col1-1-Financials-Proxy\"]/section/div[3]/div[1]/div/div[2]/div[5]/div[2]/div[3]/div[1]/div[3]/span", //5 anos com fluxo de caixa reduzido
                     "//*[@id=\"Col1-1-Financials-Proxy\"]/section/div[3]/div[1]/div/div[2]/div[7]/div[2]/div[3]/div[1]/div[3]/span", //6 anos
                     "//*[@id=\"Col1-1-Financials-Proxy\"]/section/div[3]/div[1]/div/div[2]/div[7]/div[2]/div[2]/div[1]/div[3]/span", //5 anos internacional
                     "//*[@id=\"Col1-1-Financials-Proxy\"]/section/div[3]/div[1]/div/div[2]/div[6]/div[2]/div[2]/div[1]/div[3]/span"  //6 anos com fluxo de caixa reduzido
@@ -178,6 +182,7 @@ public class AcaoBO {
 
             xPathMapAnos.put("TTM", new String[]{
                     "//*[@id=\"Col1-1-Financials-Proxy\"]/section/div[3]/div[1]/div/div[2]/div[6]/div[2]/div[3]/div[1]/div[2]/span", //5 anos
+                    "//*[@id=\"Col1-1-Financials-Proxy\"]/section/div[3]/div[1]/div/div[2]/div[5]/div[2]/div[3]/div[1]/div[2]/span", //5 anos com fluxo de caixa reduzido
                     "//*[@id=\"Col1-1-Financials-Proxy\"]/section/div[3]/div[1]/div/div[2]/div[7]/div[2]/div[3]/div[1]/div[2]/span", //6 anos
                     "//*[@id=\"Col1-1-Financials-Proxy\"]/section/div[3]/div[1]/div/div[2]/div[7]/div[2]/div[2]/div[1]/div[2]/span", //5 anos internacional
                     "//*[@id=\"Col1-1-Financials-Proxy\"]/section/div[3]/div[1]/div/div[2]/div[6]/div[2]/div[2]/div[1]/div[2]/span"  //6 anos com fluxo de caixa reduzido
