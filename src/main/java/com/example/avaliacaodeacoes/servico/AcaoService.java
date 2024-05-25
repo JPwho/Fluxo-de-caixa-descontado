@@ -13,4 +13,5 @@ public interface AcaoService {
     ResponseDTO<Double> calcularValorJusto(Long id);
     ResponseDTO rasparESalvarAcao();
     ResponseDTO<List<Acao>> listar();
+    ResponseDTO<Double> obterValorJustoPorAcao(String nome);
 }

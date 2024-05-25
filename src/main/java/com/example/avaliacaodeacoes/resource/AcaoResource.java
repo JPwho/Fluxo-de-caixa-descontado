@@ -27,6 +27,11 @@ public class AcaoResource {
         return (ResponseEntity<ResponseDTO<Double>>) ResponseEntity.status(HttpStatus.CREATED).body(acaoService.calcularValorJusto(id));
     }
 
+    @GetMapping("/valor-justo")
+    public ResponseEntity<ResponseDTO<Double>> obterValorJustoPorAcao(@RequestParam (name = "nome") String nome) {
+        return (ResponseEntity<ResponseDTO<Double>>) ResponseEntity.status(HttpStatus.ACCEPTED).body(acaoService.obterValorJustoPorAcao(nome));
+    }
+
     @PostMapping("/raspar")
     public ResponseEntity<ResponseDTO> rasparAcao() {
         return (ResponseEntity<ResponseDTO>) ResponseEntity.status(HttpStatus.CREATED).body(acaoService.rasparESalvarAcao());
