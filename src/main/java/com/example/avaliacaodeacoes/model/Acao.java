@@ -22,7 +22,6 @@ public class Acao {
     private Double precoAtual;
     private Double taxaCrescimentoEsperada;
     private Double taxaDesconto;
-//    private Double taxaLivreRisco;
     private Double beta;
     private Double valorJusto;
     private Double classificacao;
@@ -30,6 +29,7 @@ public class Acao {
     private int anosProjecao;
     private Double valorDCF;
     private LocalDate dataAtualizacao;
+    private String tipo;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "acao")
     private List<FluxoDeCaixaLivre> fluxoDeCaixaLivre;

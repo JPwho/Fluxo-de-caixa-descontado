@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 3.2.1263 on 2024-05-20 19:07:54.
+// Generated using typescript-generator version 3.2.1263 on 2024-05-26 10:24:10.
 
 export class Acao {
     id?: number;
@@ -11,7 +11,11 @@ export class Acao {
     beta?: number;
     valorJusto?: number;
     classificacao?: number;
+    numeroAcoes?: number;
     anosProjecao?: number;
+    valorDCF?: number;
+    dataAtualizacao?: Date;
+    tipo?: string;
     fluxoDeCaixaLivre?: FluxoDeCaixaLivre[];
 
     constructor(data: Acao) {
@@ -23,7 +27,11 @@ export class Acao {
         this.beta = data.beta;
         this.valorJusto = data.valorJusto;
         this.classificacao = data.classificacao;
+        this.numeroAcoes = data.numeroAcoes;
         this.anosProjecao = data.anosProjecao;
+        this.valorDCF = data.valorDCF;
+        this.dataAtualizacao = data.dataAtualizacao;
+        this.tipo = data.tipo;
         this.fluxoDeCaixaLivre = data.fluxoDeCaixaLivre;
     }
 }
@@ -94,6 +102,14 @@ export class AcaoResourceClient<O> {
      */
     rasparAcao(options?: O): RestResponse<ResponseDTO<any>> {
         return this.httpClient.request({ method: "POST", url: uriEncoding`api/acoes/raspar`, options: options });
+    }
+
+    /**
+     * HTTP GET /api/acoes/valor-justo
+     * Java method: com.example.avaliacaodeacoes.resource.AcaoResource.obterValorJustoPorAcao
+     */
+    obterValorJustoPorAcao(queryParams: { nome: string; }, options?: O): RestResponse<ResponseDTO<number>> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`api/acoes/valor-justo`, queryParams: queryParams, options: options });
     }
 
     /**
