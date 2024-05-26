@@ -14,16 +14,30 @@ def obter_dados_acao(ticker):
         paper_type = 'Ação' if stock.info.get('quoteType', 'N/A') == 'EQUITY' else 'N/A'
 
         if isinstance(cashflow, pd.DataFrame) and 'Free Cash Flow' in cashflow.index:
+            acao_info = {
+                'nome': ticker,
+                'precoAtual': None,
+                'taxaCrescimentoEsperada': None,
+                'taxaDesconto': None,
+                'beta': None,
+                'valorJusto': None,
+                'classificacao': None,
+                'numeroAcoes': shares_outstanding,
+                'anosProjecao': 0,
+                'valorDCF': None,
+                'dataAtualizacao': None,
+                'tipo': paper_type,
+                'fluxoDeCaixaLivre': []
+            }
+
             for year in cashflow.columns:
                 fcf = cashflow.loc['Free Cash Flow', year]
-                data_list.append({
-                    'acao': ticker,
-                    'nome': nome,
-                    'ano': year.year,
-                    'fluxo_caixa_livre': fcf,
-                    'qtd_acaos': shares_outstanding,
-                    'tipo': paper_type
+                acao_info['fluxoDeCaixaLivre'].append({
+                    'data': str(year),
+                    'fluxoCaixaLivre': fcf
                 })
+
+            data_list.append(acao_info)
     except Exception as e:
         print(f"Erro ao buscar dados para {ticker}: {e}", file=sys.stderr)
 
@@ -31,13 +45,6 @@ def obter_dados_acao(ticker):
 
 def main(ticker):
     dados_acao = obter_dados_acao(ticker)
-
-    # Converter os dados em DataFrame
-    df = pd.DataFrame(dados_acao)
-
-    # Salvar o DataFrame em um arquivo Excel
-    output_file = f'{ticker}_stock_free_cash_flow.xlsx'
-    df.to_excel(output_file, index=False, engine='openpyxl')
 
     # Converter os dados em formato JSON
     response_json = json.dumps(dados_acao, indent=4, ensure_ascii=False)

@@ -46,4 +46,9 @@ public class AcaoResource {
     public ResponseEntity<ResponseDTO<List<Acao>>> listar () {
         return (ResponseEntity<ResponseDTO<List<Acao>>>) ResponseEntity.status(HttpStatus.ACCEPTED).body(acaoService.listar());
     }
+
+    @PostMapping("/rasparAcaoPorPython")
+    public ResponseEntity<ResponseDTO> rasparAcaoPorPython() {
+        return (ResponseEntity<ResponseDTO>) ResponseEntity.status(HttpStatus.CREATED).body(acaoService.rasparAcaoPorPython());
+    }
 }

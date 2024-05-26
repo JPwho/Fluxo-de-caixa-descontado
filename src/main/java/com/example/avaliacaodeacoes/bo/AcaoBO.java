@@ -4,16 +4,22 @@ import com.example.avaliacaodeacoes.model.Acao;
 import com.example.avaliacaodeacoes.model.FluxoDeCaixaLivre;
 import com.example.avaliacaodeacoes.repository.AcaoRepository;
 import com.example.avaliacaodeacoes.repository.FluxoDeCaixaRepository;
+import com.fasterxml.jackson.core.json.JsonReadFeature;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import jakarta.transaction.Transactional;
+import org.hibernate.Hibernate;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -296,5 +302,125 @@ public class AcaoBO {
         }
 
         return acaoRepository.findByNome(nome).getValorJusto();
+    }
+
+    @Transactional
+    public void rasparAcaoPorPython() {
+        acaoRepository.findAll().forEach(acao -> {
+            if (Objects.nonNull(acao) && Objects.nonNull(acao.getNome())) {
+                String ticker = acao.getNome();
+                String[] cmd = {
+                        "python3", "src/main/java/com/example/avaliacaodeacoes/bo/finance_script.py", ticker
+                };
+
+                try {
+                    Process p = Runtime.getRuntime().exec(cmd);
+
+                    // Thread para ler stdout
+                    Thread outputThread = new Thread(() -> {
+                        try (BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()))) {
+                            String line;
+                            StringBuilder jsonOutput = new StringBuilder();
+                            while ((line = in.readLine()) != null) {
+                                jsonOutput.append(line);
+                            }
+                            System.out.println("JSON Output: " + jsonOutput.toString());
+
+                            ObjectMapper objectMapper = JsonMapper.builder()
+                                    .enable(JsonReadFeature.ALLOW_NON_NUMERIC_NUMBERS)
+                                    .build();
+
+                            objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+                            List<Acao> listaAcoes = objectMapper.readValue(jsonOutput.toString(),
+                                    new TypeReference<List<Acao>>() {});
+                            System.out.println(listaAcoes.toString());
+
+                            if (!listaAcoes.isEmpty()) {
+                                Acao acao1 = listaAcoes.get(0);
+                                Acao acaoDoBanco = acaoRepository.findByNome(acao1.getNome());
+
+                                // Forçar o carregamento da coleção fluxoDeCaixaLivre
+                                Hibernate.initialize(acao.getFluxoDeCaixaLivre());
+
+                                if (acaoDoBanco != null) {
+                                    acaoDoBanco.setTipo(acao1.getTipo());
+                                    acaoDoBanco.setNumeroAcoes(acao1.getNumeroAcoes());
+
+                                    if (acao1.getFluxoDeCaixaLivre() != null) {
+                                        for (FluxoDeCaixaLivre fluxo : acao1.getFluxoDeCaixaLivre()) {
+                                            FluxoDeCaixaLivre fluxoDoBanco = null;
+
+                                            if (acaoDoBanco.getFluxoDeCaixaLivre() != null) {
+                                                fluxoDoBanco = acaoDoBanco.getFluxoDeCaixaLivre()
+                                                        .stream()
+                                                        .filter(f -> f.getData().equals(fluxo.getData()))
+                                                        .findFirst()
+                                                        .orElse(null);
+                                            }
+
+                                            if (fluxoDoBanco == null) {
+                                                fluxoDoBanco = new FluxoDeCaixaLivre();
+                                                fluxoDoBanco.setData(fluxo.getData());
+                                                fluxoDoBanco.setFluxoCaixaLivre(fluxo.getFluxoCaixaLivre());
+                                                fluxoDoBanco.setAcao(acaoDoBanco);
+                                                acaoDoBanco.getFluxoDeCaixaLivre().add(fluxoDoBanco);
+                                            } else {
+                                                fluxoDoBanco.setFluxoCaixaLivre(fluxo.getFluxoCaixaLivre());
+                                            }
+                                        }
+                                    }
+
+                                    acaoRepository.save(acaoDoBanco);
+                                }
+                            }
+                        } catch (Exception e) {
+                            System.out.println("erro: " + e.getMessage());
+                        }
+                    });
+
+                    // Thread para ler stderr
+                    Thread errorThread = new Thread(() -> {
+                        try (BufferedReader err = new BufferedReader(new InputStreamReader(p.getErrorStream()))) {
+                            String line;
+                            StringBuilder errorOutput = new StringBuilder();
+                            while ((line = err.readLine()) != null) {
+                                errorOutput.append(line);
+                            }
+                            System.err.println("Error Output: " + errorOutput.toString());
+                        } catch (Exception e) {
+                            System.out.println("erro: " + e.getMessage());
+                        }
+                    });
+
+                    outputThread.start();
+                    errorThread.start();
+
+                    // Aguarde até que o processo termine ou timeout de 60 segundos
+                    long startTime = System.currentTimeMillis();
+                    long timeout = 60000; // 60 segundos em milissegundos
+                    boolean timeoutReached = false;
+
+                    while (p.isAlive()) {
+                        if (System.currentTimeMillis() - startTime > timeout) {
+                            timeoutReached = true;
+                            break;
+                        }
+                        Thread.sleep(100); // Aguarde 100 milissegundos antes de verificar novamente
+                    }
+
+                    if (timeoutReached) {
+                        p.destroy();
+                        throw new RuntimeException("Process timeout");
+                    }
+
+                    outputThread.join();
+                    errorThread.join();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 }

@@ -1,5 +1,7 @@
 package com.example.avaliacaodeacoes.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,12 +14,14 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Acao {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(unique = true)
+    @JsonProperty("nome")
     private String nome;
     private Double precoAtual;
     private Double taxaCrescimentoEsperada;
@@ -25,10 +29,12 @@ public class Acao {
     private Double beta;
     private Double valorJusto;
     private Double classificacao;
+    @JsonProperty("numeroAcoes")
     private Double numeroAcoes;
     private int anosProjecao;
     private Double valorDCF;
     private LocalDate dataAtualizacao;
+    @JsonProperty("tipo")
     private String tipo;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "acao")

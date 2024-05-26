@@ -14,4 +14,6 @@ public interface AcaoService {
     ResponseDTO rasparESalvarAcao();
     ResponseDTO<List<Acao>> listar();
     ResponseDTO<Double> obterValorJustoPorAcao(String nome);
+
+    ResponseDTO rasparAcaoPorPython();
 }

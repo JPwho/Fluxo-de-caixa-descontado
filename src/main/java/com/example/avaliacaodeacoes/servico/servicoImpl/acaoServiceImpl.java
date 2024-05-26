@@ -96,6 +96,22 @@ public class acaoServiceImpl implements AcaoService {
     }
 
     @Override
+    public ResponseDTO rasparAcaoPorPython() {
+        ResponseDTO responseDTO = new ResponseDTO<>();
+        try {
+            acaoBO.rasparAcaoPorPython();
+            responseDTO.setCode(200);
+            responseDTO.setStatus(responseDTO.getStatus().SUCESSO);
+            responseDTO.setMessagens("Sucesso!");
+        } catch (Exception e) {
+            responseDTO.setCode(400);
+            responseDTO.setStatus(responseDTO.getStatus().ERRO);
+            responseDTO.setMessagens(e.getMessage());
+        }
+        return responseDTO;
+    }
+
+    @Override
     public ResponseDTO buscarTodasAcoes() {
         ResponseDTO responseDTO = new ResponseDTO<>();
         try {
