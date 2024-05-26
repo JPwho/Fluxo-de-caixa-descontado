@@ -1,51 +1,53 @@
 import yfinance as yf
 import pandas as pd
+import json
+import sys
 
-# Lista de tickers das ações da B3
-tickers = ["CXSE3.SA"]
+def obter_dados_acao(ticker):
+    data_list = []
 
-# Lista para armazenar dados
-data_list = []
-
-for ticker in tickers:
-    stock = yf.Ticker(ticker)
-    
-    # Obter dados específicos
     try:
+        stock = yf.Ticker(ticker)
         nome = stock.info.get('shortName', 'N/A')
-        print(nome)
         cashflow = stock.cashflow
         shares_outstanding = stock.info.get('sharesOutstanding', 'N/A')
+        paper_type = 'Ação' if stock.info.get('quoteType', 'N/A') == 'EQUITY' else 'N/A'
 
-        # Extrair fluxos de caixa livres (Free Cash Flow)
-        free_cash_flow = cashflow.loc['Free Cash Flow'] if 'Free Cash Flow' in cashflow.index else 'N/A'
+        if isinstance(cashflow, pd.DataFrame) and 'Free Cash Flow' in cashflow.index:
+            for year in cashflow.columns:
+                fcf = cashflow.loc['Free Cash Flow', year]
+                data_list.append({
+                    'acao': ticker,
+                    'nome': nome,
+                    'ano': year.year,
+                    'fluxo_caixa_livre': fcf,
+                    'qtd_acaos': shares_outstanding,
+                    'tipo': paper_type
+                })
+    except Exception as e:
+        print(f"Erro ao buscar dados para {ticker}: {e}", file=sys.stderr)
 
-        # Verificar se é uma ação
-        if stock.info.get('quoteType', 'N/A') == 'EQUITY':
-            paper_type = 'Ação'
-        else:
-            paper_type = 'N/A'
-        
-        # Adicionar dados para cada ano disponível
+    return data_list
 
-        for year, fcf in free_cash_flow.items():
-            data_list.append({
-                'acao': ticker,
-                # 'Nome': nome,
-                'ano': year.year,
-                'fluxo_caixa_livre': fcf,
-                'qtd_acaos': shares_outstanding,
-                'tipo': paper_type
-            })
-            
-    except KeyError as e:
-        print(f"Error fetching data for {ticker}: {e}")
+def main(ticker):
+    dados_acao = obter_dados_acao(ticker)
 
-# Converter a lista de dados em um DataFrame
-df = pd.DataFrame(data_list)
+    # Converter os dados em DataFrame
+    df = pd.DataFrame(dados_acao)
 
-# Salvar o DataFrame em um arquivo Excel
-output_file = 'b3_stock_free_cash_flow.xlsx'
-df.to_excel(output_file, index=False, engine='openpyxl')
+    # Salvar o DataFrame em um arquivo Excel
+    output_file = f'{ticker}_stock_free_cash_flow.xlsx'
+    df.to_excel(output_file, index=False, engine='openpyxl')
 
-print(f"Dados exportados para {output_file}")
+    # Converter os dados em formato JSON
+    response_json = json.dumps(dados_acao, indent=4, ensure_ascii=False)
+
+    print(response_json)
+
+if __name__ == '__main__':
+    if len(sys.argv) != 2:
+        print("Uso: python finance_script.py <ticker>")
+        sys.exit(1)
+
+    ticker = sys.argv[1]
+    main(ticker)
